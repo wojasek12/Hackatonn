@@ -3,9 +3,11 @@ package com.example.wojtaszek.hackaton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.kontakt.sdk.android.ble.connection.OnServiceReadyListener;
 import com.kontakt.sdk.android.ble.manager.ProximityManager;
+import com.kontakt.sdk.android.ble.manager.ProximityManagerFactory;
 import com.kontakt.sdk.android.ble.manager.listeners.EddystoneListener;
 import com.kontakt.sdk.android.ble.manager.listeners.IBeaconListener;
 import com.kontakt.sdk.android.ble.manager.listeners.simple.SimpleEddystoneListener;
@@ -24,8 +26,9 @@ public class FindBeaconActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_beacon);
-        KontaktSDK.initialize("YOUR_API_KEY");
 
+        proximityManager = ProximityManagerFactory.create(this);
+        proximityManager.setIBeaconListener(createIBeaconListener());
     }
 
     @Override
@@ -61,16 +64,14 @@ public class FindBeaconActivity extends AppCompatActivity {
         return new SimpleIBeaconListener() {
             @Override
             public void onIBeaconDiscovered(IBeaconDevice ibeacon, IBeaconRegion region) {
-                Log.i("Sample", "IBeacon discovered: " + ibeacon.toString());
-            }
-        };
-    }
+                Log.i("Sample", "IBeacon discovered: " + ibeacon.getUniqueId());
 
-    private EddystoneListener createEddystoneListener() {
-        return new SimpleEddystoneListener() {
-            @Override
-            public void onEddystoneDiscovered(IEddystoneDevice eddystone, IEddystoneNamespace namespace) {
-                Log.i("Sample", "Eddystone discovered: " + eddystone.toString());
+                //Sprawdzanie w bazie jak nazywa się szczyt (jeśli jest to szczyt)
+                if(ibeacon.getUniqueId()!=null && ibeacon.getUniqueId().equalsIgnoreCase("xX36")){
+
+                    Toast.makeText(FindBeaconActivity.this, "Gratulację! Zdobyłeś Giewont!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         };
     }

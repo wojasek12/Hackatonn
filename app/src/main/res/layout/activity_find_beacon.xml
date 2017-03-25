@@ -6,8 +6,4 @@
     android:layout_height="match_parent"
     tools:context="com.example.wojtaszek.hackaton.FindBeaconActivity">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:id="@+id/button"/>
 </android.support.constraint.ConstraintLayout>
